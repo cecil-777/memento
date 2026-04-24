@@ -24,9 +24,27 @@ const router = createBrowserRouter([
     ]
   },
 ]);
-createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-    <Toaster richColors position="top-center" />
-  </React.StrictMode>,
-)
+declare global {
+  interface Window {
+    root?: ReturnType<typeof createRoot>;
+  }
+}
+
+const container = document.getElementById('root')!;
+if (window.root) {
+  window.root.render(
+    <React.StrictMode>
+      <RouterProvider router={router} />
+      <Toaster richColors position="top-center" />
+    </React.StrictMode>
+  );
+} else {
+  const root = createRoot(container);
+  root.render(
+    <React.StrictMode>
+      <RouterProvider router={router} />
+      <Toaster richColors position="top-center" />
+    </React.StrictMode>
+  );
+  window.root = root;
+}
