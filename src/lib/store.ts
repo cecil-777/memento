@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { v4 as uuidv4 } from 'uuid';
-import { subDays, isAfter, addDays, parseISO } from 'date-fns';
+import { subDays } from 'date-fns';
 export type EntryStatus = 'incubating' | 'ready' | 'silver' | 'archived';
 export interface Interpretation {
   id: string;
@@ -21,18 +21,17 @@ export interface Entry {
 interface MementoState {
   entries: Entry[];
   addEntry: (entry: Omit<Entry, 'id' | 'dateAdded' | 'status' | 'versions'>) => void;
-  updateEntry: (id: string, updates: Partial<Pick<Entry, 'url' | 'topic' | 'notes'>>) => void;
   updateEntryStatus: (id: string, status: EntryStatus) => void;
   addVersion: (entryId: string, text: string) => void;
   importData: (data: string) => void;
-  checkReadyStates: () => void;
 }
+// Mock initial data for the foundation phase
 const INITIAL_ENTRIES: Entry[] = [
   {
     id: '1',
     url: 'https://en.wikipedia.org/wiki/Goldlist_method',
-    topic: 'Methodology',
-    notes: 'The Goldlist method is a slow-learning technique that bypasses short-term memory through a deliberate 14-day distillation cycle.',
+    topic: 'Learning',
+    notes: 'The Goldlist method relies on the long-term memory instead of short-term cramming.',
     dateAdded: subDays(new Date(), 15).toISOString(),
     status: 'ready',
     versions: []
@@ -41,7 +40,7 @@ const INITIAL_ENTRIES: Entry[] = [
     id: '2',
     url: 'https://fs.blog/mental-models/',
     topic: 'Philosophy',
-    notes: 'Mental models are the framework we use to understand life. They are like lens through which we view and organize complex systems.',
+    notes: 'Thinking in mental models helps understand the world better.',
     dateAdded: new Date().toISOString(),
     status: 'incubating',
     versions: []
@@ -49,7 +48,7 @@ const INITIAL_ENTRIES: Entry[] = [
 ];
 export const useStore = create<MementoState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       entries: INITIAL_ENTRIES,
       addEntry: (entryData) => set((state) => ({
         entries: [
@@ -63,48 +62,21 @@ export const useStore = create<MementoState>()(
           }
         ]
       })),
-      updateEntry: (id, updates) => set((state) => ({
-        entries: state.entries.map((e) => e.id === id ? { ...e, ...updates } : e)
-      })),
       updateEntryStatus: (id, status) => set((state) => ({
         entries: state.entries.map((e) => e.id === id ? { ...e, status } : e)
       })),
       addVersion: (entryId, text) => set((state) => ({
         entries: state.entries.map((e) => {
           if (e.id === entryId) {
-            const nextVersionNum = e.versions.length + 1;
-            const newVersion: Interpretation = {
-              id: uuidv4(),
-              text,
-              date: new Date().toISOString(),
-              version: nextVersionNum
-            };
+            const nextVersion = e.versions.length + 1;
             return {
               ...e,
-              versions: [...e.versions, newVersion]
+              versions: [...e.versions, { id: uuidv4(), text, date: new Date().toISOString(), version: nextVersion }]
             };
           }
           return e;
         })
       })),
-      checkReadyStates: () => {
-        const { entries } = get();
-        const now = new Date();
-        let changed = false;
-        const nextEntries = entries.map(e => {
-          if (e.status === 'incubating') {
-            const unlockDate = addDays(parseISO(e.dateAdded), 14);
-            if (isAfter(now, unlockDate)) {
-              changed = true;
-              return { ...e, status: 'ready' as EntryStatus };
-            }
-          }
-          return e;
-        });
-        if (changed) {
-          set({ entries: nextEntries });
-        }
-      },
       importData: (data) => {
         try {
           const parsed = JSON.parse(data);
@@ -117,14 +89,7 @@ export const useStore = create<MementoState>()(
       }
     }),
     {
-      name: 'memento-storage-v1',
-      onRehydrateStorage: (state) => {
-        return (rehydratedState) => {
-          if (rehydratedState) {
-            rehydratedState.checkReadyStates();
-          }
-        };
-      },
+      name: 'memento-storage',
     }
   )
 );
