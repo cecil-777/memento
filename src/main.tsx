@@ -1,18 +1,15 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom"
+import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import '@/index.css'
-import { MobileLayout } from '@/components/layout/MobileLayout'
+import LayoutWrapper from '@/components/layout/LayoutWrapper'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { CapturePage } from '@/pages/CapturePage'
 import { DistillPage } from '@/pages/DistillPage'
+import { KnowledgeTreePage } from '@/pages/KnowledgeTreePage'
 import { SettingsPage } from '@/pages/SettingsPage'
 import { RouteErrorBoundary } from '@/components/RouteErrorBoundary'
-const LayoutWrapper = () => (
-  <MobileLayout>
-    <Outlet />
-  </MobileLayout>
-);
+import { Toaster } from 'sonner'
 const router = createBrowserRouter([
   {
     path: "/",
@@ -22,7 +19,7 @@ const router = createBrowserRouter([
       { path: "/", element: <DashboardPage /> },
       { path: "/capture", element: <CapturePage /> },
       { path: "/distill", element: <DistillPage /> },
-      { path: "/tree", element: <div className="p-8"><h1>Knowledge Tree</h1><p className="mt-4 text-muted">A structured view of your silver items will appear here.</p></div> },
+      { path: "/tree", element: <KnowledgeTreePage /> },
       { path: "/settings", element: <SettingsPage /> },
     ]
   },
@@ -30,5 +27,6 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <RouterProvider router={router} />
+    <Toaster richColors position="top-center" />
   </React.StrictMode>,
 )
