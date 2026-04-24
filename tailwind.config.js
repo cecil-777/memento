@@ -13,26 +13,37 @@ export default {
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
-  			parchment: '#F4F1EA',
-  			ink: '#2B2B2B',
-  			silver: '#C0C0C0',
-  			muted: {
-  				DEFAULT: '#8C8C8C',
-  				foreground: '#8C8C8C'
-  			},
   			primary: {
-  				DEFAULT: '#2B2B2B',
-  				foreground: '#F4F1EA'
+  				DEFAULT: '#7C3AED', // Vibrant Violet
+  				foreground: '#FFFFFF'
   			},
-  			border: 'rgba(43, 43, 43, 0.1)',
-  			input: 'rgba(43, 43, 43, 0.1)',
-  			ring: '#2B2B2B',
+  			secondary: {
+  				DEFAULT: '#F472B6', // Soft Pink
+  				foreground: '#FFFFFF'
+  			},
+        accent: {
+          DEFAULT: '#10B981', // Emerald
+          foreground: '#FFFFFF'
+        },
+  			surface: '#F9FAFB',
+        card: '#FFFFFF',
+  			border: 'rgba(0, 0, 0, 0.05)',
+  			input: 'rgba(0, 0, 0, 0.05)',
+  			ring: '#7C3AED',
   		},
   		borderRadius: {
-  			lg: 'var(--radius)',
-  			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
+  			lg: '2rem',
+  			md: '1.5rem',
+  			sm: '1rem'
   		},
+      backgroundImage: {
+        'vibrant-gradient': 'linear-gradient(135deg, #7C3AED 0%, #F472B6 100%)',
+        'soft-gradient': 'linear-gradient(180deg, #FFFFFF 0%, #F9FAFB 100%)',
+      },
+      boxShadow: {
+        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
+        'vibrant': '0 10px 25px -5px rgba(124, 58, 237, 0.3)',
+      }
   	}
   },
   plugins: [require("tailwindcss-animate")]

@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { useStore } from '@/lib/store';
 import { useSwipeable } from 'react-swipeable';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Check, X, ArrowRight, Trash2 } from 'lucide-react';
+import { ExternalLink, Check, X, ArrowLeft, Trash2, Edit3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 export function DistillPage() {
+  const navigate = useNavigate();
   const entries = useStore(state => state.entries);
   const updateEntryStatus = useStore(state => state.updateEntryStatus);
   const addVersion = useStore(state => state.addVersion);
@@ -36,7 +38,7 @@ export function DistillPage() {
       setExitDirection(0);
       setIsRefining(false);
     }, 300);
-    toast.success("Added to Silver List");
+    toast.success("Knowledge sealed in the vault.");
   };
   const handlers = useSwipeable({
     onSwipedLeft: () => !isRefining && handleArchive(),
@@ -46,45 +48,55 @@ export function DistillPage() {
   });
   if (!current) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
-        <h2 className="text-3xl font-copernicus font-bold mb-4">The Well is Dry</h2>
-        <p className="text-muted font-tiempos italic max-w-xs mx-auto">
-          Your thoughts are still maturing in the holding pen. Patience is the gardener of wisdom.
+      <div className="max-w-7xl mx-auto px-6 py-24 text-center space-y-6">
+        <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Check className="text-primary w-10 h-10" />
+        </div>
+        <h2 className="text-2xl font-copernicus font-bold">Collection Refined</h2>
+        <p className="text-muted-foreground font-tiempos italic max-w-xs mx-auto">
+          All items have been processed. Your knowledge garden is perfectly tended.
         </p>
+        <Button onClick={() => navigate('/')} className="vibrant-btn">Return Home</Button>
       </div>
     );
   }
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 h-full flex flex-col overflow-hidden">
-      <header className="mb-8 flex justify-between items-end">
-        <div>
-          <span className="text-[10px] font-styrene uppercase tracking-widest text-muted block mb-1">Matured Content</span>
-          <h1 className="text-3xl font-bold">Distillation</h1>
+    <div className="max-w-7xl mx-auto px-6 py-8 h-full flex flex-col overflow-hidden">
+      <header className="mb-8 flex justify-between items-center">
+        <div className="flex items-center gap-4">
+          <button onClick={() => navigate('/')} className="p-2 rounded-full hover:bg-neutral-100 transition-colors">
+            <ArrowLeft size={20} />
+          </button>
+          <div>
+            <h1 className="text-2xl font-bold font-copernicus">Distillation</h1>
+            <p className="text-[9px] font-styrene text-muted-foreground uppercase tracking-widest font-bold">Review Collection</p>
+          </div>
         </div>
-        <span className="text-[10px] font-styrene uppercase tracking-widest text-muted font-bold">
-          {readyEntries.length - currentIndex} REMAINING
-        </span>
+        <div className="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-styrene font-bold">
+          {readyEntries.length - currentIndex} LEFT
+        </div>
       </header>
-      <div className="flex-1 relative flex items-center justify-center">
+      <div className="flex-1 relative flex items-center justify-center py-4">
         <AnimatePresence mode="wait">
           {!isRefining ? (
             <motion.div
               {...handlers}
               key={current.id}
-              initial={{ x: 0, opacity: 1, scale: 1 }}
-              animate={{ 
-                x: exitDirection * 500, 
+              initial={{ x: 0, opacity: 1, scale: 0.9 }}
+              animate={{
+                x: exitDirection * 500,
                 opacity: exitDirection !== 0 ? 0 : 1,
-                rotate: exitDirection * 20 
+                rotate: exitDirection * 15,
+                scale: 1
               }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="w-full bg-white border border-ink/5 p-8 rounded-3xl shadow-xl parchment-texture cursor-grab active:cursor-grabbing"
+              className="w-full h-full glass-panel rounded-[3rem] p-10 flex flex-col justify-center gap-8 cursor-grab active:cursor-grabbing border-primary/10"
             >
               <div className="space-y-6">
-                <span className="inline-block px-3 py-1 bg-ink/5 rounded-full text-[10px] font-styrene uppercase tracking-widest text-muted">
+                <span className="inline-block px-3 py-1 bg-primary text-white rounded-full text-[9px] font-styrene font-bold uppercase tracking-widest">
                   {current.topic}
                 </span>
-                <p className="text-2xl font-tiempos leading-relaxed text-ink/90 italic">
+                <p className="text-3xl font-tiempos leading-snug text-foreground/90 italic">
                   "{current.notes}"
                 </p>
                 {current.url && (
@@ -92,53 +104,52 @@ export function DistillPage() {
                     href={current.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-muted hover:text-ink transition-colors font-styrene text-[10px] uppercase tracking-widest"
+                    className="flex items-center gap-2 text-primary font-styrene text-[10px] uppercase tracking-widest font-bold hover:underline"
                   >
-                    <ExternalLink size={12} />
-                    View Source
+                    <ExternalLink size={14} /> Open Original Source
                   </a>
                 )}
-                <div className="pt-12 flex justify-between items-center opacity-40">
-                  <div className="flex items-center gap-2">
-                    <X size={16} />
-                    <span className="text-[10px] font-styrene uppercase tracking-tighter">Swipe Left to Discard</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-styrene uppercase tracking-tighter">Swipe Right to Keep</span>
-                    <ArrowRight size={16} />
-                  </div>
+              </div>
+              <div className="pt-8 flex justify-between items-center opacity-30">
+                <div className="flex items-center gap-2">
+                  <X size={16} />
+                  <span className="text-[9px] font-styrene uppercase tracking-tighter font-bold">Swipe Left to Archive</span>
+                </div>
+                <div className="flex items-center gap-2 text-right">
+                  <span className="text-[9px] font-styrene uppercase tracking-tighter font-bold">Swipe Right to Keep</span>
+                  <Check size={16} />
                 </div>
               </div>
             </motion.div>
           ) : (
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="w-full h-full flex flex-col space-y-6"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="w-full h-full glass-panel rounded-[3rem] p-8 flex flex-col space-y-6"
             >
-              <div className="flex-1 bg-white border border-ink/5 p-6 rounded-3xl shadow-inner parchment-texture">
-                <label className="text-[10px] font-styrene uppercase tracking-widest text-muted block mb-4">Refine Interpretation</label>
+              <div className="flex-1 bg-neutral-50/50 rounded-[2rem] p-6 border border-black/5">
+                <label className="text-[9px] font-styrene uppercase tracking-widest text-primary font-bold block mb-4">Refined Wisdom</label>
                 <Textarea
                   value={refinedNotes}
                   onChange={(e) => setRefinedNotes(e.target.value)}
-                  className="w-full h-[70%] bg-transparent border-none focus-visible:ring-0 text-xl font-tiempos p-0 resize-none leading-relaxed"
-                  placeholder="The core of this idea is..."
+                  className="w-full h-[80%] bg-transparent border-none focus-visible:ring-0 text-2xl font-tiempos p-0 resize-none leading-tight"
+                  placeholder="How has this thought evolved?"
                   autoFocus
                 />
               </div>
               <div className="flex gap-4">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   onClick={() => setIsRefining(false)}
-                  className="flex-1 rounded-xl h-14 font-styrene text-xs uppercase tracking-widest border-ink/10"
+                  className="flex-1 rounded-full h-14 font-styrene text-[10px] uppercase tracking-widest font-bold border-black/5"
                 >
-                  Back
+                  Cancel
                 </Button>
-                <Button 
+                <Button
                   onClick={handleKeep}
-                  className="flex-1 rounded-xl h-14 bg-ink text-parchment font-styrene text-xs uppercase tracking-widest shadow-lg"
+                  className="vibrant-btn flex-1 h-14"
                 >
-                  Seal in Silver
+                  Save Reflection
                 </Button>
               </div>
             </motion.div>
@@ -146,20 +157,20 @@ export function DistillPage() {
         </AnimatePresence>
       </div>
       {!isRefining && (
-        <div className="py-8 grid grid-cols-2 gap-4">
+        <div className="py-6 grid grid-cols-2 gap-4">
           <button
             onClick={handleArchive}
-            className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-ink/5 hover:bg-ink/10 transition-colors"
+            className="flex flex-col items-center justify-center gap-2 p-6 rounded-[2rem] bg-neutral-100 hover:bg-neutral-200 transition-colors"
           >
-            <Trash2 size={20} className="text-muted" />
-            <span className="text-[9px] font-styrene uppercase tracking-widest font-bold opacity-60">Archive</span>
+            <Trash2 size={24} className="text-muted-foreground/60" />
+            <span className="text-[9px] font-styrene uppercase tracking-widest font-bold opacity-60 text-muted-foreground">Archive</span>
           </button>
           <button
             onClick={startRefining}
-            className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-ink text-parchment shadow-lg active:scale-95 transition-all"
+            className="flex flex-col items-center justify-center gap-2 p-6 rounded-[2rem] bg-vibrant-gradient text-white shadow-vibrant active:scale-95 transition-all"
           >
-            <Check size={20} />
-            <span className="text-[9px] font-styrene uppercase tracking-widest font-bold">Keep</span>
+            <Edit3 size={24} />
+            <span className="text-[9px] font-styrene uppercase tracking-widest font-bold">Keep & Refine</span>
           </button>
         </div>
       )}

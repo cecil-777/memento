@@ -26,13 +26,12 @@ const router = createBrowserRouter([
 ]);
 declare global {
   interface Window {
-    root?: ReturnType<typeof createRoot>;
+    __reactRoot?: ReturnType<typeof createRoot>;
   }
 }
-
 const container = document.getElementById('root')!;
-if (window.root) {
-  window.root.render(
+if (window.__reactRoot) {
+  window.__reactRoot.render(
     <React.StrictMode>
       <RouterProvider router={router} />
       <Toaster richColors position="top-center" />
@@ -46,5 +45,5 @@ if (window.root) {
       <Toaster richColors position="top-center" />
     </React.StrictMode>
   );
-  window.root = root;
+  window.__reactRoot = root;
 }
