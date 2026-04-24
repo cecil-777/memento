@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Home, Plus, Layers, GitCommit, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { PWAInstallPrompt } from '@/components/PWAInstallPrompt';
 export function MobileLayout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const navItems = [
@@ -62,6 +63,7 @@ export function MobileLayout({ children }: { children: React.ReactNode }) {
             );
           })}
         </nav>
+        <PWAInstallPrompt />
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'memento-v1.1';
+const CACHE_NAME = 'memento-v1';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -29,33 +29,15 @@ self.addEventListener('activate', (event) => {
 });
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
-  const url = new URL(event.request.url);
-  // For SPA navigation, always return index.html if offline
-  if (event.request.mode === 'navigate') {
-    event.respondWith(
-      fetch(event.request).catch(() => caches.match('/'))
-    );
-    return;
-  }
-  // Cache-first strategy for static assets
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
         return cachedResponse;
       }
-      return fetch(event.request).then((response) => {
-        // Only cache successful requests from the same origin or specific CDNs
-        if (!response || response.status !== 200 || response.type !== 'basic' && !url.host.includes('fonts.googleapis')) {
-          return response;
+      return fetch(event.request).catch(() => {
+        if (event.request.mode === 'navigate') {
+          return caches.match('/');
         }
-        const responseToCache = response.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
-        return response;
-      }).catch(() => {
-        // Fallback for failed fetches when offline
-        return null;
       });
     })
   );
