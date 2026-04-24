@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useStore } from '@/lib/store';
 import { Link } from 'react-router-dom';
 import { addDays, differenceInDays, parseISO } from 'date-fns';
@@ -7,6 +7,10 @@ import { Sparkles, ShoppingBag, Clock, ArrowRight, Edit3 } from 'lucide-react';
 import { EntryEditDrawer } from '@/components/EntryEditDrawer';
 export function DashboardPage() {
   const entries = useStore(s => s.entries);
+  const checkReadyStates = useStore(s => s.checkReadyStates);
+  useEffect(() => {
+    checkReadyStates();
+  }, [checkReadyStates]);
   const incubating = useMemo(() =>
     entries.filter(e => e.status === 'incubating'),
     [entries]
@@ -81,7 +85,7 @@ export function DashboardPage() {
                     </span>
                     <div className="flex items-center gap-3">
                       <EntryEditDrawer entry={entry}>
-                        <button 
+                        <button
                           className="w-10 h-10 rounded-full bg-neutral-50 flex items-center justify-center text-muted-foreground hover:text-primary transition-all active:scale-90 border border-black/5"
                           onClick={(e) => e.stopPropagation()}
                         >

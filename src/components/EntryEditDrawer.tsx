@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useStore, Entry } from '@/lib/store';
 import {
   Drawer,
@@ -13,7 +13,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
-import { Save, X } from 'lucide-react';
+import { Save } from 'lucide-react';
 interface EntryEditDrawerProps {
   entry: Entry;
   children: React.ReactNode;
@@ -26,6 +26,15 @@ export function EntryEditDrawer({ entry, children }: EntryEditDrawerProps) {
     notes: entry.notes
   });
   const [isOpen, setIsOpen] = useState(false);
+  useEffect(() => {
+    if (isOpen) {
+      setFormData({
+        topic: entry.topic,
+        url: entry.url,
+        notes: entry.notes
+      });
+    }
+  }, [isOpen, entry]);
   const handleSave = () => {
     if (!formData.notes.trim()) {
       toast.error("Interpretation cannot be empty.");
@@ -80,7 +89,7 @@ export function EntryEditDrawer({ entry, children }: EntryEditDrawerProps) {
                 Discard
               </Button>
             </DrawerClose>
-            <Button 
+            <Button
               onClick={handleSave}
               className="vibrant-btn flex-1 h-14 flex items-center justify-center gap-2"
             >

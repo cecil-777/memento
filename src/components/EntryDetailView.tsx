@@ -23,6 +23,12 @@ export function EntryDetailView({ entry, children }: EntryDetailViewProps) {
   const addVersion = useStore(s => s.addVersion);
   const [newReflection, setNewReflection] = useState('');
   const [isAdding, setIsAdding] = useState(false);
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      setIsAdding(false);
+      setNewReflection('');
+    }
+  };
   const handleAddVersion = () => {
     if (!newReflection.trim()) return;
     addVersion(entry.id, newReflection);
@@ -30,11 +36,12 @@ export function EntryDetailView({ entry, children }: EntryDetailViewProps) {
     setIsAdding(false);
     toast.success("Reflection added to product history.");
   };
-  const latestReflection = entry.versions.length > 0 
-    ? entry.versions[entry.versions.length - 1] 
+  const latestReflection = entry.versions.length > 0
+    ? entry.versions[entry.versions.length - 1]
     : null;
+  const hasHistory = entry.versions.length > 0;
   return (
-    <Drawer>
+    <Drawer onOpenChange={handleOpenChange}>
       <DrawerTrigger asChild>
         {children}
       </DrawerTrigger>
@@ -75,7 +82,6 @@ export function EntryDetailView({ entry, children }: EntryDetailViewProps) {
               </div>
             )}
             <div className="space-y-12 px-2">
-              {/* Latest Version */}
               <div className="relative pl-10">
                 <div className="absolute left-0 top-0 h-full w-[2px] bg-vibrant-gradient rounded-full" />
                 <div className="absolute -left-[5px] top-0 h-3 w-3 rounded-full bg-primary ring-4 ring-white" />
@@ -83,7 +89,7 @@ export function EntryDetailView({ entry, children }: EntryDetailViewProps) {
                    <div className="flex items-center gap-2">
                     <Sparkles size={12} className="text-primary" />
                     <span className="text-[9px] font-styrene uppercase tracking-widest text-primary font-bold">
-                      Current Perspective — {format(parseISO(latestReflection?.date ?? entry.dateAdded), 'MMM d, yyyy')}
+                      {hasHistory ? 'Current Perspective' : 'Initial Capture'} — {format(parseISO(latestReflection?.date ?? entry.dateAdded), 'MMM d, yyyy')}
                     </span>
                   </div>
                   <p className="text-xl font-tiempos leading-relaxed text-foreground font-medium">
@@ -91,14 +97,12 @@ export function EntryDetailView({ entry, children }: EntryDetailViewProps) {
                   </p>
                 </div>
               </div>
-              {/* History Timeline */}
-              {entry.versions.length > 0 && (
+              {hasHistory && (
                 <div className="space-y-10">
                    <div className="flex items-center gap-2 text-muted-foreground/40 pl-10">
                     <History size={14} />
                     <span className="text-[10px] font-styrene uppercase tracking-widest font-bold">Evolution Log</span>
                   </div>
-                  {/* Original Note */}
                   <div className="relative pl-10 opacity-60">
                     <div className="absolute left-0 top-0 h-full w-[2px] bg-neutral-200 rounded-full" />
                     <div className="absolute -left-[5px] top-0 h-3 w-3 rounded-full bg-neutral-300 ring-4 ring-white" />
@@ -109,7 +113,6 @@ export function EntryDetailView({ entry, children }: EntryDetailViewProps) {
                       {entry.notes}
                     </p>
                   </div>
-                  {/* Intermediary versions */}
                   {[...entry.versions].slice(0, -1).reverse().map((v) => (
                     <div key={v.id} className="relative pl-10 opacity-80">
                       <div className="absolute left-0 top-0 h-full w-[2px] bg-neutral-200 rounded-full" />

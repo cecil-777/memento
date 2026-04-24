@@ -1,8 +1,8 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useStore } from '@/lib/store';
 import { useSwipeable } from 'react-swipeable';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Check, X, ArrowLeft, Trash2, Edit3 } from 'lucide-react';
+import { Check, X, ArrowLeft, Trash2, Edit3, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
@@ -18,13 +18,16 @@ export function DistillPage() {
   const [refinedNotes, setRefinedNotes] = useState('');
   const [exitDirection, setExitDirection] = useState<number>(0);
   const current = readyEntries[currentIndex];
+  useEffect(() => {
+    setExitDirection(0);
+    setRefinedNotes('');
+    setIsRefining(false);
+  }, [current?.id]);
   const handleArchive = useCallback(() => {
     if (!current) return;
     setExitDirection(-1);
     setTimeout(() => {
       updateEntryStatus(current.id, 'archived');
-      setExitDirection(0);
-      setIsRefining(false);
     }, 300);
   }, [current, updateEntryStatus]);
   const startRefining = useCallback(() => {
@@ -38,8 +41,6 @@ export function DistillPage() {
     setExitDirection(1);
     setTimeout(() => {
       updateEntryStatus(current.id, 'silver');
-      setExitDirection(0);
-      setIsRefining(false);
     }, 300);
     toast.success("Knowledge sealed in the vault.");
   }, [current, refinedNotes, addVersion, updateEntryStatus]);
@@ -49,10 +50,6 @@ export function DistillPage() {
     preventScrollOnSwipe: true,
     trackMouse: true
   });
-  // To avoid ref warning with Framer Motion, we spread handlers but avoid the 'ref' prop 
-  // and apply it to a container or handle the ref logic separately if needed.
-  // In most cases with react-swipeable + framer-motion, using the spread on the motion component works 
-  // if we pass the ref correctly or use the internal ref.
   const { ref: swipeRef, ...handlers } = swipeHandlers;
   if (!current) {
     return (
@@ -81,7 +78,7 @@ export function DistillPage() {
           </div>
         </div>
         <div className="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-styrene font-bold">
-          {readyEntries.length - currentIndex} LEFT
+          {readyEntries.length} LEFT
         </div>
       </header>
       <div className="flex-1 relative flex items-center justify-center py-4">
@@ -123,10 +120,10 @@ export function DistillPage() {
               <div className="pt-8 flex justify-between items-center opacity-30 select-none">
                 <div className="flex items-center gap-2">
                   <X size={16} />
-                  <span className="text-[9px] font-styrene uppercase tracking-tighter font-bold">Swipe Left to Archive</span>
+                  <span className="text-[9px] font-styrene uppercase tracking-tighter font-bold">Archive</span>
                 </div>
                 <div className="flex items-center gap-2 text-right">
-                  <span className="text-[9px] font-styrene uppercase tracking-tighter font-bold">Swipe Right to Keep</span>
+                  <span className="text-[9px] font-styrene uppercase tracking-tighter font-bold">Keep</span>
                   <Check size={16} />
                 </div>
               </div>
