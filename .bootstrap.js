@@ -77,7 +77,9 @@ function updateWranglerJsonc() {
 }
 
 function runSetupCommands() {
-    const commands = [];
+    const commands = [
+    "bun add uuid date-fns lucide-react framer-motion react-swipeable"
+];
     
     if (commands.length === 0) {
         console.log('⊘ No setup commands to run');
