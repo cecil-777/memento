@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { useStore } from '@/lib/store';
-import shallow from 'zustand/react/shallow';
 import {
   Accordion,
   AccordionContent,
@@ -10,10 +9,11 @@ import {
 import { EntryDetailView } from '@/components/EntryDetailView';
 import { Layers, ChevronRight, Bookmark } from 'lucide-react';
 export function KnowledgeTreePage() {
-  const entries = useStore(state => state.entries, shallow);
+  const entries = useStore(state => state.entries);
   const treeData = useMemo(() => {
-    const silverAndArchived = entries.filter(e => e.status === 'silver' || e.status === 'archived');
-    const grouped: Record<string, typeof entries[number][]> = {};
+    const safeEntries = entries || [];
+    const silverAndArchived = safeEntries.filter(e => e.status === 'silver' || e.status === 'archived');
+    const grouped: Record<string, typeof safeEntries[number][]> = {};
     silverAndArchived.forEach(entry => {
       const topic = entry.topic || 'Uncategorized';
       if (!grouped[topic]) grouped[topic] = [];
@@ -49,17 +49,17 @@ export function KnowledgeTreePage() {
                 </AccordionTrigger>
                 <AccordionContent className="pt-3 pb-6 space-y-3 px-2">
                   {items.map(item => (
-                    <EntryDetailView key={item.id} entry={item}>
+                  <EntryDetailView key={item.id || 'unknown'} entry={item}>
                       <button className="w-full text-left p-5 rounded-[1.2rem] bg-white hover:bg-neutral-section transition-all border border-neutral-border hover:shadow-sm group flex items-start gap-4">
                         <div className="mt-1 h-2 w-2 rounded-full bg-primary/30 shrink-0 group-hover:bg-primary-dark transition-colors" />
                         <div className="flex-1">
                           <p className="text-sm font-tiempos text-text-body line-clamp-2 leading-relaxed mb-3">
-                            {item.notes}
+                            {item.notes || 'No notes'}
                           </p>
                           <div className="flex items-center gap-2">
                             <Bookmark size={10} className="text-primary-dark" />
                             <span className="text-[8px] font-styrene uppercase tracking-widest text-primary-dark font-bold">
-                              {item.versions.length + 1} Growth Stages
+                              {(item.versions?.length || 0) + 1} Growth Stages
                             </span>
                             {item.status === 'archived' && (
                               <span className="text-[8px] font-styrene uppercase tracking-widest px-2 py-0.5 bg-neutral-section rounded-full text-text-caption font-bold ml-auto">

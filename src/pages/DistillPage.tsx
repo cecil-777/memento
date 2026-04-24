@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useStore } from '@/lib/store';
-import shallow from 'zustand/react/shallow';
 import { useSwipeable } from 'react-swipeable';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, X, ArrowLeft, Trash2, Edit3, ExternalLink, Sparkles } from 'lucide-react';
@@ -11,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRef } from 'react';
 export function DistillPage() {
   const navigate = useNavigate();
-const entries = useStore(s => s.entries, shallow);
+const entries = useStore(s => s.entries);
 const updateEntryStatus = useStore(s => s.updateEntryStatus);
 const addVersion = useStore(s => s.addVersion);
   const readyEntries = entries.filter(e => e.status === 'ready');
@@ -28,7 +27,7 @@ const addVersion = useStore(s => s.addVersion);
     setExitDirection(0);
     setRefinedNotes('');
     setIsRefining(false);
-  }, [current?.id, currentIndex]);
+  }, [current?.id]);
   const handleArchive = useCallback(() => {
     if (!current) return;
     setExitDirection(-1);
@@ -36,12 +35,12 @@ const addVersion = useStore(s => s.addVersion);
       updateEntryStatus(current.id, 'archived');
       setCurrentIndex(prev => Math.min(prev + 1, readyLengthRef.current - 1));
     }, 300);
-  }, [current, updateEntryStatus, readyLengthRef]);
+  }, [current?.id, updateEntryStatus, readyLengthRef]);
   const startRefining = useCallback(() => {
     if (!current) return;
     setRefinedNotes(current.notes);
     setIsRefining(true);
-  }, [current]);
+  }, [current?.notes]);
   const handleKeep = useCallback(() => {
     if (!current) return;
     addVersion(current.id, refinedNotes || current.notes);
@@ -51,7 +50,7 @@ const addVersion = useStore(s => s.addVersion);
       setCurrentIndex(prev => Math.min(prev + 1, readyLengthRef.current - 1));
     }, 300);
     toast.success("Knowledge sealed in the vault.");
-  }, [current, refinedNotes, addVersion, updateEntryStatus, readyLengthRef]);
+  }, [current?.id, refinedNotes, addVersion, updateEntryStatus, readyLengthRef]);
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => !isRefining && handleArchive(),
     onSwipedRight: () => !isRefining && startRefining(),
