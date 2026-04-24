@@ -3,38 +3,41 @@
 @tailwind utilities;
 @layer base {
   :root {
-    --background: 210 40% 98%;
-    --foreground: 222 47% 11%;
-    --primary: 226 70% 33%;
+    --background: 220 18% 96%;
+    --foreground: 0 0% 12%;
+    --primary: 255 87% 76%;
     --primary-foreground: 0 0% 100%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 255 87% 76%;
     --radius: 2rem;
   }
   body {
-    @apply bg-surface text-foreground antialiased selection:bg-primary/20 selection:text-primary;
+    @apply bg-neutral-bg text-text-body antialiased selection:bg-primary/20 selection:text-primary;
   }
   h1, h2, h3, h4 {
-    @apply font-copernicus tracking-tight;
+    @apply font-copernicus tracking-tight text-text-heading;
   }
   p {
-    @apply font-tiempos;
+    @apply font-tiempos text-text-body;
   }
 }
 @layer components {
   .mobile-container {
-    @apply max-w-md mx-auto min-h-screen bg-surface shadow-2xl relative overflow-x-hidden border-x border-black/5;
+    @apply max-w-md mx-auto min-h-screen bg-neutral-bg shadow-2xl relative overflow-x-hidden border-x border-neutral-border/30;
   }
   .glass-panel {
-    @apply bg-white/70 backdrop-blur-xl border border-black/[0.08] shadow-glass;
+    @apply bg-white/70 backdrop-blur-xl border border-neutral-border shadow-glass;
   }
   .product-card {
-    @apply bg-white rounded-[2rem] border border-black/[0.08] shadow-sm hover:shadow-xl transition-all duration-300 active:scale-[0.98];
+    @apply bg-neutral-card rounded-[2rem] border border-neutral-border shadow-sm hover:shadow-md transition-all duration-300 active:scale-[0.99];
   }
   .vibrant-btn {
-    @apply bg-vibrant-gradient text-white font-styrene text-xs uppercase tracking-widest py-4 px-8 rounded-full shadow-vibrant hover:opacity-90 transition-all active:scale-95;
+    @apply bg-premium-gradient text-white font-styrene text-xs uppercase tracking-widest py-4 px-8 rounded-full shadow-vibrant hover:opacity-90 transition-all active:scale-95;
   }
-  .nav-active-pill {
-    @apply absolute -top-1 w-1 h-1 rounded-full bg-primary shadow-[0_0_10px_rgba(30,58,138,0.8)];
-  }
+  .text-heading { @apply text-text-heading font-copernicus; }
+  .text-body { @apply text-text-body font-tiempos; }
+  .text-caption { @apply text-text-caption font-styrene; }
 }
 ::-webkit-scrollbar {
   width: 0px;

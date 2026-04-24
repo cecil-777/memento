@@ -55,14 +55,14 @@ export function DistillPage() {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="py-24 text-center space-y-6">
-          <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mx-auto mb-4 border border-primary/10">
-            <Check className="text-primary w-10 h-10" />
+          <div className="w-20 h-20 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-success/20">
+            <Check className="text-success w-10 h-10" />
           </div>
-          <h2 className="text-2xl font-copernicus font-bold">Collection Refined</h2>
-          <p className="text-muted-foreground font-tiempos italic max-w-xs mx-auto">
+          <h2 className="text-2xl font-copernicus font-bold text-text-heading">Collection Refined</h2>
+          <p className="text-text-body font-tiempos italic max-w-xs mx-auto">
             All items have been processed. Your knowledge garden is perfectly tended.
           </p>
-          <Button onClick={() => navigate('/')} className="vibrant-btn shadow-vibrant">Return Home</Button>
+          <Button onClick={() => navigate('/')} className="vibrant-btn">Return Home</Button>
         </div>
       </div>
     );
@@ -72,15 +72,15 @@ export function DistillPage() {
       <div className="py-8 md:py-10 lg:py-12 flex-1 flex flex-col">
         <header className="mb-8 flex justify-between items-center px-2">
           <div className="flex items-center gap-4">
-            <button onClick={() => navigate('/')} className="p-2 rounded-full hover:bg-neutral-100 transition-colors">
-              <ArrowLeft size={20} />
+            <button onClick={() => navigate('/')} className="p-2 rounded-full hover:bg-neutral-section transition-colors">
+              <ArrowLeft size={20} className="text-text-heading" />
             </button>
             <div>
-              <h1 className="text-2xl font-bold font-copernicus">Distillation</h1>
-              <p className="text-[9px] font-styrene text-muted-foreground uppercase tracking-widest font-bold">Review Collection</p>
+              <h1 className="text-2xl font-bold font-copernicus text-text-heading">Distillation</h1>
+              <p className="text-[9px] font-styrene text-text-caption uppercase tracking-widest font-bold">Review Collection</p>
             </div>
           </div>
-          <div className="bg-primary/5 border border-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-styrene font-bold">
+          <div className="bg-primary-light/50 border border-primary text-primary-dark px-3 py-1 rounded-full text-[10px] font-styrene font-bold">
             {readyEntries.length} LEFT
           </div>
         </header>
@@ -99,13 +99,16 @@ export function DistillPage() {
                   scale: 1
                 }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className="w-full h-full glass-panel rounded-[3rem] p-10 flex flex-col justify-center gap-8 cursor-grab active:cursor-grabbing border-primary/10 touch-none shadow-vibrant"
+                className="w-full h-full bg-neutral-card rounded-[3rem] p-10 flex flex-col justify-center gap-8 cursor-grab active:cursor-grabbing border border-neutral-border touch-none shadow-vibrant relative overflow-hidden"
               >
-                <div className="space-y-6">
-                  <span className="inline-block px-3 py-1 bg-primary text-white rounded-full text-[9px] font-styrene font-bold uppercase tracking-widest">
+                <div className="absolute top-0 right-0 p-10 opacity-[0.03] text-primary pointer-events-none">
+                  <Sparkles size={200} />
+                </div>
+                <div className="space-y-6 relative z-10">
+                  <span className="inline-block px-3 py-1 bg-primary-dark text-white rounded-full text-[9px] font-styrene font-bold uppercase tracking-widest">
                     {current.topic}
                   </span>
-                  <p className="text-3xl font-tiempos leading-snug text-foreground/90 italic">
+                  <p className="text-3xl font-tiempos leading-snug text-text-heading italic">
                     "{current.notes}"
                   </p>
                   {current.url && (
@@ -113,7 +116,7 @@ export function DistillPage() {
                       href={current.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-primary font-styrene text-[10px] uppercase tracking-widest font-bold hover:underline"
+                      className="flex items-center gap-2 text-primary-dark font-styrene text-[10px] uppercase tracking-widest font-bold hover:underline"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <ExternalLink size={14} /> Open Original Source
@@ -121,11 +124,11 @@ export function DistillPage() {
                   )}
                 </div>
                 <div className="pt-8 flex justify-between items-center opacity-30 select-none">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 text-text-caption">
                     <X size={16} />
                     <span className="text-[9px] font-styrene uppercase tracking-tighter font-bold">Archive</span>
                   </div>
-                  <div className="flex items-center gap-2 text-right">
+                  <div className="flex items-center gap-2 text-right text-primary-dark">
                     <span className="text-[9px] font-styrene uppercase tracking-tighter font-bold">Keep</span>
                     <Check size={16} />
                   </div>
@@ -137,14 +140,14 @@ export function DistillPage() {
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 50 }}
-                className="w-full h-full glass-panel rounded-[3rem] p-8 flex flex-col space-y-6 shadow-vibrant"
+                className="w-full h-full bg-neutral-card rounded-[3rem] p-8 flex flex-col space-y-6 shadow-vibrant border border-neutral-border"
               >
-                <div className="flex-1 bg-neutral-50/50 rounded-[2rem] p-6 border border-black/[0.08]">
-                  <label className="text-[9px] font-styrene uppercase tracking-widest text-primary font-bold block mb-4">Refined Wisdom</label>
+                <div className="flex-1 bg-neutral-bg rounded-[2rem] p-6 border border-neutral-border">
+                  <label className="text-[9px] font-styrene uppercase tracking-widest text-primary-dark font-bold block mb-4">Refined Wisdom</label>
                   <Textarea
                     value={refinedNotes}
                     onChange={(e) => setRefinedNotes(e.target.value)}
-                    className="w-full h-[80%] bg-transparent border-none focus-visible:ring-0 text-2xl font-tiempos p-0 resize-none leading-tight"
+                    className="w-full h-[80%] bg-transparent border-none focus-visible:ring-0 text-2xl font-tiempos p-0 resize-none leading-tight text-text-body"
                     placeholder="How has this thought evolved?"
                     autoFocus
                   />
@@ -153,7 +156,7 @@ export function DistillPage() {
                   <Button
                     variant="outline"
                     onClick={() => setIsRefining(false)}
-                    className="flex-1 rounded-full h-14 font-styrene text-[10px] uppercase tracking-widest font-bold border-black/[0.08]"
+                    className="flex-1 rounded-full h-14 font-styrene text-[10px] uppercase tracking-widest font-bold border-neutral-border"
                   >
                     Cancel
                   </Button>
@@ -172,14 +175,14 @@ export function DistillPage() {
           <div className="py-6 px-2 grid grid-cols-2 gap-4">
             <button
               onClick={handleArchive}
-              className="flex flex-col items-center justify-center gap-2 p-6 rounded-[2rem] bg-neutral-100 hover:bg-neutral-200 transition-colors active:scale-95 border border-black/[0.08]"
+              className="flex flex-col items-center justify-center gap-2 p-6 rounded-[2rem] bg-neutral-section hover:bg-neutral-border/50 transition-colors active:scale-95 border border-neutral-border"
             >
-              <Trash2 size={24} className="text-muted-foreground/60" />
-              <span className="text-[9px] font-styrene uppercase tracking-widest font-bold opacity-60 text-muted-foreground">Archive</span>
+              <Trash2 size={24} className="text-text-caption" />
+              <span className="text-[9px] font-styrene uppercase tracking-widest font-bold text-text-caption">Archive</span>
             </button>
             <button
               onClick={startRefining}
-              className="flex flex-col items-center justify-center gap-2 p-6 rounded-[2rem] bg-vibrant-gradient text-white shadow-vibrant active:scale-95 transition-all"
+              className="flex flex-col items-center justify-center gap-2 p-6 rounded-[2rem] bg-premium-gradient text-white shadow-vibrant active:scale-95 transition-all"
             >
               <Edit3 size={24} />
               <span className="text-[9px] font-styrene uppercase tracking-widest font-bold">Keep & Refine</span>
