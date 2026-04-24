@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useStore } from '@/lib/store';
-import { useShallow } from 'zustand/react/shallow';
+import { shallow } from 'zustand/react/shallow';
 import { useSwipeable } from 'react-swipeable';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, X, ArrowLeft, Trash2, Edit3, ExternalLink, Sparkles } from 'lucide-react';
@@ -8,9 +8,10 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { useRef } from 'react';
 export function DistillPage() {
   const navigate = useNavigate();
-  const entries = useStore(useShallow(s => s.entries));
+  const entries = useStore(shallow(s => s.entries));
   const updateEntryStatus = useStore(s => s.updateEntryStatus);
   const addVersion = useStore(s => s.addVersion);
   const readyEntries = entries.filter(e => e.status === 'ready');
@@ -18,6 +19,10 @@ export function DistillPage() {
   const [isRefining, setIsRefining] = useState(false);
   const [refinedNotes, setRefinedNotes] = useState('');
   const [exitDirection, setExitDirection] = useState<number>(0);
+  const readyLengthRef = useRef(0);
+  useEffect(() => {
+    readyLengthRef.current = readyEntries.length;
+  }, [readyEntries.length]);
   const current = readyEntries[currentIndex];
   useEffect(() => {
     setExitDirection(0);
@@ -29,6 +34,7 @@ export function DistillPage() {
     setExitDirection(-1);
     setTimeout(() => {
       updateEntryStatus(current.id, 'archived');
+      setCurrentIndex(prev => Math.min(prev + 1, readyLengthRef.current - 1));
     }, 300);
   }, [current, updateEntryStatus]);
   const startRefining = useCallback(() => {
@@ -42,6 +48,7 @@ export function DistillPage() {
     setExitDirection(1);
     setTimeout(() => {
       updateEntryStatus(current.id, 'silver');
+      setCurrentIndex(prev => Math.min(prev + 1, readyLengthRef.current - 1));
     }, 300);
     toast.success("Knowledge sealed in the vault.");
   }, [current, refinedNotes, addVersion, updateEntryStatus]);

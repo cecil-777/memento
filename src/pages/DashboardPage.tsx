@@ -1,13 +1,13 @@
 import React, { useMemo, useEffect } from 'react';
 import { useStore } from '@/lib/store';
-import { useShallow } from 'zustand/react/shallow';
+import { shallow } from 'zustand/react/shallow';
 import { Link } from 'react-router-dom';
 import { addDays, differenceInDays, parseISO } from 'date-fns';
 import { Progress } from '@/components/ui/progress';
 import { Sparkles, ShoppingBag, Clock, ArrowRight, Edit3 } from 'lucide-react';
 import { EntryEditDrawer } from '@/components/EntryEditDrawer';
 export function DashboardPage() {
-  const entries = useStore(useShallow(s => s.entries));
+  const entries = useStore(shallow(s => s.entries));
   const checkReadyStates = useStore(s => s.checkReadyStates);
   useEffect(() => {
     checkReadyStates();
@@ -16,7 +16,7 @@ export function DashboardPage() {
     return () => {
       window.removeEventListener('focus', handleFocus);
     };
-  }, [checkReadyStates]);
+  }, []);
   const incubating = useMemo(() =>
     entries.filter(e => e.status === 'incubating'),
     [entries]
@@ -79,7 +79,7 @@ export function DashboardPage() {
           ) : (
             <div className="grid grid-cols-1 gap-8">
               {incubating.map((entry) => {
-                const addedDate = parseISO(entry.dateAdded);
+                const addedDate = entry.dateAdded ? parseISO(entry.dateAdded) : new Date(0);
                 const unlockDate = addDays(addedDate, 14);
                 const daysPassed = differenceInDays(new Date(), addedDate);
                 const daysRemaining = Math.max(0, differenceInDays(unlockDate, new Date()));
