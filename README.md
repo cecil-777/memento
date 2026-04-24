@@ -1,6 +1,6 @@
 # Memento PKM
 
-[cloudflarebutton]
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cecil-777/memento)
 
 A modern, full-stack Personal Knowledge Management (PKM) application built with React, TypeScript, Tailwind CSS, and Shadcn/UI. Powered by Cloudflare Workers for the backend API and optimized for performance, scalability, and developer experience.
 
@@ -70,7 +70,7 @@ bun deploy
 
 This builds assets and deploys via Wrangler.
 
-[cloudflarebutton]
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cecil-777/memento)
 
 ### Manual Deployment
 
