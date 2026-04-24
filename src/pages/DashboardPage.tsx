@@ -1,12 +1,13 @@
 import React, { useMemo, useEffect } from 'react';
 import { useStore } from '@/lib/store';
+import { useShallow } from 'zustand/react/shallow';
 import { Link } from 'react-router-dom';
 import { addDays, differenceInDays, parseISO } from 'date-fns';
 import { Progress } from '@/components/ui/progress';
 import { Sparkles, ShoppingBag, Clock, ArrowRight, Edit3 } from 'lucide-react';
 import { EntryEditDrawer } from '@/components/EntryEditDrawer';
 export function DashboardPage() {
-  const entries = useStore(s => s.entries);
+  const entries = useStore(useShallow(s => s.entries));
   const checkReadyStates = useStore(s => s.checkReadyStates);
   useEffect(() => {
     checkReadyStates();

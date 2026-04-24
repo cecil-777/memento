@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useStore } from '@/lib/store';
+import { useShallow } from 'zustand/react/shallow';
 import { useSwipeable } from 'react-swipeable';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, X, ArrowLeft, Trash2, Edit3, ExternalLink, Sparkles } from 'lucide-react';
@@ -9,7 +10,7 @@ import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 export function DistillPage() {
   const navigate = useNavigate();
-  const entries = useStore(s => s.entries);
+  const entries = useStore(useShallow(s => s.entries));
   const updateEntryStatus = useStore(s => s.updateEntryStatus);
   const addVersion = useStore(s => s.addVersion);
   const readyEntries = entries.filter(e => e.status === 'ready');

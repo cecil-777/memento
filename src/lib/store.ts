@@ -101,7 +101,9 @@ export const useStore = create<MementoState>()(
           }
           return e;
         });
-        if (changed) set({ entries: nextEntries });
+        if (changed) {
+          set({ entries: nextEntries });
+        }
       },
       importData: (data) => {
         try {
@@ -115,7 +117,7 @@ export const useStore = create<MementoState>()(
       }
     }),
     {
-      name: 'memento-storage',
+      name: 'memento-storage-v1',
       onRehydrateStorage: (state) => {
         return (rehydratedState) => {
           if (rehydratedState) {

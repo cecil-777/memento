@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { useStore } from '@/lib/store';
+import { useShallow } from 'zustand/react/shallow';
 import {
   Accordion,
   AccordionContent,
@@ -9,7 +10,7 @@ import {
 import { EntryDetailView } from '@/components/EntryDetailView';
 import { Layers, ChevronRight, Bookmark } from 'lucide-react';
 export function KnowledgeTreePage() {
-  const entries = useStore(state => state.entries);
+  const entries = useStore(useShallow(state => state.entries));
   const treeData = useMemo(() => {
     const silverAndArchived = entries.filter(e => e.status === 'silver' || e.status === 'archived');
     const grouped: Record<string, typeof entries> = {};
