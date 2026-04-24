@@ -8,24 +8,39 @@ export function SettingsPage() {
   const entries = useStore(s => s.entries);
   const importData = useStore(s => s.importData);
   const handleExport = () => {
-    const dataStr = JSON.stringify(entries, null, 2);
-    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-    const exportFileDefaultName = `memento-backup-${new Date().toISOString().split('T')[0]}.json`;
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
-    linkElement.click();
-    toast.success("Vault backup downloaded.");
+    try {
+      const dataStr = JSON.stringify(entries, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const exportFileDefaultName = `memento-backup-${new Date().toISOString().split('T')[0]}.json`;
+      const linkElement = document.createElement('a');
+      linkElement.href = url;
+      linkElement.download = exportFileDefaultName;
+      document.body.appendChild(linkElement);
+      linkElement.click();
+      document.body.removeChild(linkElement);
+      // Cleanup the URL object to free up memory
+      URL.revokeObjectURL(url);
+      toast.success(`Vault backup exported with ${entries.length} items.`);
+    } catch (error) {
+      console.error('Export failed:', error);
+      toast.error("Failed to generate backup file.");
+    }
   };
   const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (event) => {
-      const content = event.target?.result as string;
-      importData(content);
-      toast.success("Knowledge restored successfully.");
+      try {
+        const content = event.target?.result as string;
+        importData(content);
+        toast.success("Knowledge restored successfully.");
+      } catch (error) {
+        toast.error("Invalid backup file format.");
+      }
     };
+    reader.onerror = () => toast.error("Failed to read the backup file.");
     reader.readAsText(file);
   };
   return (
@@ -53,7 +68,7 @@ export function SettingsPage() {
               >
                 <div className="text-left">
                   <span className="font-styrene text-[10px] uppercase tracking-widest font-bold block opacity-80">Download</span>
-                  <span className="font-copernicus text-sm">Export Local Backup</span>
+                  <span className="font-copernicus text-sm">Export Local Backup ({entries.length})</span>
                 </div>
                 <Download size={20} />
               </button>
@@ -74,7 +89,7 @@ export function SettingsPage() {
             <div className="space-y-2">
               <h4 className="font-styrene text-[10px] uppercase tracking-widest font-bold text-primary">Privacy Policy</h4>
               <p className="font-tiempos text-sm leading-relaxed text-foreground/70 italic">
-                Your thoughts are yours alone. Memento stores all data locally in your browser cache.
+                Your thoughts are yours alone. Memento stores all data locally in your browser cache. 
                 We recommend weekly exports to keep your intellectual assets safe from browser clearing.
               </p>
             </div>
@@ -82,7 +97,7 @@ export function SettingsPage() {
           <div className="text-center pt-12">
             <div className="inline-block px-4 py-2 bg-neutral-100 rounded-full border border-black/[0.08]">
               <p className="text-[9px] font-styrene uppercase tracking-widest text-muted-foreground font-bold">
-                Version 1.0.0 — Navy Edition
+                Version 1.1.0 — Goldlist Edition
               </p>
             </div>
           </div>

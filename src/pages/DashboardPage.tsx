@@ -9,13 +9,20 @@ export function DashboardPage() {
   const entries = useStore(s => s.entries);
   const checkReadyStates = useStore(s => s.checkReadyStates);
   useEffect(() => {
+    // Initial check
     checkReadyStates();
+    // Re-check when user returns to the tab
+    const handleFocus = () => checkReadyStates();
+    window.addEventListener('focus', handleFocus);
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+    };
   }, [checkReadyStates]);
-  const incubating = useMemo(() =>
+  const incubating = useMemo(() => 
     entries.filter(e => e.status === 'incubating'),
     [entries]
   );
-  const readyItemsCount = useMemo(() =>
+  const readyItemsCount = useMemo(() => 
     entries.filter(e => e.status === 'ready').length,
     [entries]
   );
@@ -86,7 +93,7 @@ export function DashboardPage() {
                       </span>
                       <div className="flex items-center gap-3">
                         <EntryEditDrawer entry={entry}>
-                          <button
+                          <button 
                             className="w-10 h-10 rounded-full bg-neutral-50 flex items-center justify-center text-muted-foreground hover:text-primary transition-all active:scale-90 border border-black/[0.08]"
                             onClick={(e) => e.stopPropagation()}
                           >

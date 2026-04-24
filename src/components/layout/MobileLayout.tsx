@@ -15,7 +15,7 @@ export function MobileLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-neutral-100 font-sans">
       <div className="mobile-container flex flex-col">
-        <main className="flex-1 pb-24 overflow-y-auto">
+        <main className="flex-1 pb-32 overflow-y-auto scroll-smooth">
           {children}
         </main>
         <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[360px] glass-panel h-20 rounded-[2.5rem] flex items-center justify-around px-2 z-50">
@@ -45,6 +45,9 @@ export function MobileLayout({ children }: { children: React.ReactNode }) {
                 {isActive && (
                   <motion.div
                     layoutId="nav-glow"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 25 }}
                     className="absolute -top-2 w-1 h-1 rounded-full bg-primary shadow-[0_0_8px_rgba(30,58,138,0.8)]"
                   />
                 )}

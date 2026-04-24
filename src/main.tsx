@@ -29,21 +29,25 @@ declare global {
     __reactRoot?: ReturnType<typeof createRoot>;
   }
 }
-const container = document.getElementById('root')!;
-if (window.__reactRoot) {
-  window.__reactRoot.render(
-    <React.StrictMode>
-      <RouterProvider router={router} />
-      <Toaster richColors position="top-center" />
-    </React.StrictMode>
-  );
+const container = document.getElementById('root');
+if (!container) {
+  console.error('Fatal: Root container not found');
 } else {
-  const root = createRoot(container);
-  root.render(
-    <React.StrictMode>
-      <RouterProvider router={router} />
-      <Toaster richColors position="top-center" />
-    </React.StrictMode>
-  );
-  window.__reactRoot = root;
+  if (window.__reactRoot) {
+    window.__reactRoot.render(
+      <React.StrictMode>
+        <RouterProvider router={router} />
+        <Toaster richColors position="top-center" closeButton />
+      </React.StrictMode>
+    );
+  } else {
+    const root = createRoot(container);
+    root.render(
+      <React.StrictMode>
+        <RouterProvider router={router} />
+        <Toaster richColors position="top-center" closeButton />
+      </React.StrictMode>
+    );
+    window.__reactRoot = root;
+  }
 }
