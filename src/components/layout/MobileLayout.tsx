@@ -43,9 +43,9 @@ export function MobileLayout({ children }: { children: React.ReactNode }) {
                 )}
               >
                 {isActive && (
-                  <motion.div 
+                  <motion.div
                     layoutId="nav-glow"
-                    className="absolute -top-2 w-1 h-1 rounded-full bg-primary shadow-[0_0_8px_rgba(124,58,237,0.8)]"
+                    className="absolute -top-2 w-1 h-1 rounded-full bg-primary shadow-[0_0_8px_rgba(30,58,138,0.8)]"
                   />
                 )}
                 <Icon size={22} strokeWidth={isActive ? 2.5 : 1.5} />

@@ -14,22 +14,22 @@ export default {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			primary: {
-  				DEFAULT: '#7C3AED', // Vibrant Violet
+  				DEFAULT: '#1E3A8A', // Navy
   				foreground: '#FFFFFF'
   			},
   			secondary: {
-  				DEFAULT: '#F472B6', // Soft Pink
+  				DEFAULT: '#3B82F6', // Blue
   				foreground: '#FFFFFF'
   			},
         accent: {
-          DEFAULT: '#10B981', // Emerald
+          DEFAULT: '#059669', // Deeper Emerald
           foreground: '#FFFFFF'
         },
-  			surface: '#F9FAFB',
+  			surface: '#F8FAFC',
         card: '#FFFFFF',
-  			border: 'rgba(0, 0, 0, 0.05)',
-  			input: 'rgba(0, 0, 0, 0.05)',
-  			ring: '#7C3AED',
+  			border: 'rgba(0, 0, 0, 0.08)',
+  			input: 'rgba(0, 0, 0, 0.08)',
+  			ring: '#1E3A8A',
   		},
   		borderRadius: {
   			lg: '2rem',
@@ -37,12 +37,12 @@ export default {
   			sm: '1rem'
   		},
       backgroundImage: {
-        'vibrant-gradient': 'linear-gradient(135deg, #7C3AED 0%, #F472B6 100%)',
-        'soft-gradient': 'linear-gradient(180deg, #FFFFFF 0%, #F9FAFB 100%)',
+        'vibrant-gradient': 'linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%)',
+        'soft-gradient': 'linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%)',
       },
       boxShadow: {
         'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
-        'vibrant': '0 10px 25px -5px rgba(124, 58, 237, 0.3)',
+        'vibrant': '0 10px 25px -5px rgba(30, 58, 138, 0.2)',
       }
   	}
   },

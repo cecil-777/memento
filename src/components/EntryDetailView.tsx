@@ -47,7 +47,7 @@ export function EntryDetailView({ entry, children }: EntryDetailViewProps) {
       </DrawerTrigger>
       <DrawerContent className="max-h-[92vh] bg-surface rounded-t-[3rem] border-none shadow-2xl">
         <div className="max-w-md mx-auto w-full h-full flex flex-col overflow-hidden px-4">
-          <DrawerHeader className="border-b border-black/5 pb-6 pt-8 flex items-start justify-between">
+          <DrawerHeader className="border-b border-black/[0.08] pb-6 pt-8 flex items-start justify-between">
             <div className="space-y-1">
               <span className="text-[9px] font-styrene uppercase tracking-widest text-primary font-bold bg-primary/10 px-2 py-1 rounded-full">{entry.topic}</span>
               <DrawerTitle className="text-2xl font-copernicus pt-2">Trace History</DrawerTitle>
@@ -56,7 +56,7 @@ export function EntryDetailView({ entry, children }: EntryDetailViewProps) {
               variant="ghost"
               size="icon"
               onClick={() => setIsAdding(!isAdding)}
-              className="rounded-full bg-white shadow-sm border border-black/5 text-primary active:scale-90 transition-all"
+              className="rounded-full bg-white shadow-sm border border-black/[0.08] text-primary active:scale-90 transition-all"
             >
               {isAdding ? <X size={20} /> : <Edit3 size={20} />}
             </Button>
@@ -64,7 +64,7 @@ export function EntryDetailView({ entry, children }: EntryDetailViewProps) {
           <DrawerDescription className='sr-only'>Trace the evolution of your understanding over time.</DrawerDescription>
           <div className="flex-1 overflow-y-auto py-8 space-y-10 pb-32 scroll-smooth">
             {isAdding && (
-              <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500 glass-panel p-6 rounded-[2rem]">
+              <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500 glass-panel p-6 rounded-[2rem] border-primary/10">
                 <label className="text-[10px] font-styrene uppercase tracking-widest text-primary font-bold">New Interpretation</label>
                 <Textarea
                   className="min-h-[150px] bg-neutral-50/50 border-none rounded-2xl font-tiempos text-lg leading-relaxed focus:bg-white transition-all shadow-inner p-4"
@@ -75,7 +75,7 @@ export function EntryDetailView({ entry, children }: EntryDetailViewProps) {
                 />
                 <Button
                   onClick={handleAddVersion}
-                  className="vibrant-btn w-full"
+                  className="vibrant-btn w-full shadow-vibrant"
                 >
                   Save Version {entry.versions.length + 1}
                 </Button>
@@ -84,7 +84,7 @@ export function EntryDetailView({ entry, children }: EntryDetailViewProps) {
             <div className="space-y-12 px-2">
               <div className="relative pl-10">
                 <div className="absolute left-0 top-0 h-full w-[2px] bg-vibrant-gradient rounded-full" />
-                <div className="absolute -left-[5px] top-0 h-3 w-3 rounded-full bg-primary ring-4 ring-white" />
+                <div className="absolute -left-[5px] top-0 h-3 w-3 rounded-full bg-primary ring-4 ring-white shadow-sm" />
                 <div className="space-y-3">
                    <div className="flex items-center gap-2">
                     <Sparkles size={12} className="text-primary" />
@@ -129,9 +129,9 @@ export function EntryDetailView({ entry, children }: EntryDetailViewProps) {
               )}
             </div>
           </div>
-          <DrawerFooter className="p-6 pb-10 bg-white/80 backdrop-blur-md border-t border-black/5">
+          <DrawerFooter className="p-6 pb-10 bg-white/80 backdrop-blur-md border-t border-black/[0.08]">
             <DrawerClose asChild>
-              <Button variant="outline" className="w-full h-14 rounded-full font-styrene text-[10px] uppercase tracking-widest font-bold border-black/5 shadow-sm">
+              <Button variant="outline" className="w-full h-14 rounded-full font-styrene text-[10px] uppercase tracking-widest font-bold border-black/[0.08] shadow-sm bg-white">
                 Minimize Record
               </Button>
             </DrawerClose>

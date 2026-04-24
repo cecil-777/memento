@@ -3,9 +3,9 @@
 @tailwind utilities;
 @layer base {
   :root {
-    --background: 0 0% 98%;
-    --foreground: 240 10% 3.9%;
-    --primary: 262 83% 58%;
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+    --primary: 226 70% 33%;
     --primary-foreground: 0 0% 100%;
     --radius: 2rem;
   }
@@ -24,16 +24,16 @@
     @apply max-w-md mx-auto min-h-screen bg-surface shadow-2xl relative overflow-x-hidden border-x border-black/5;
   }
   .glass-panel {
-    @apply bg-white/70 backdrop-blur-xl border border-white/20 shadow-glass;
+    @apply bg-white/70 backdrop-blur-xl border border-black/[0.08] shadow-glass;
   }
   .product-card {
-    @apply bg-white rounded-[2rem] border border-black/5 shadow-sm hover:shadow-xl transition-all duration-300 active:scale-[0.98];
+    @apply bg-white rounded-[2rem] border border-black/[0.08] shadow-sm hover:shadow-xl transition-all duration-300 active:scale-[0.98];
   }
   .vibrant-btn {
     @apply bg-vibrant-gradient text-white font-styrene text-xs uppercase tracking-widest py-4 px-8 rounded-full shadow-vibrant hover:opacity-90 transition-all active:scale-95;
   }
   .nav-active-pill {
-    @apply absolute -top-1 w-1 h-1 rounded-full bg-primary shadow-[0_0_10px_rgba(124,58,237,0.8)];
+    @apply absolute -top-1 w-1 h-1 rounded-full bg-primary shadow-[0_0_10px_rgba(30,58,138,0.8)];
   }
 }
 ::-webkit-scrollbar {
