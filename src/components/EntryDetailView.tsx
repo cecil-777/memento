@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useStore } from '@/lib/store';
+import { useStore, Entry } from '@/lib/store';
 import {
   Drawer,
   DrawerContent,
@@ -12,15 +12,15 @@ import {
 } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { format } from 'date-fns';
-import { Plus, History, X, Edit3, Sparkles } from 'lucide-react';
+import { format, parseISO } from 'date-fns';
+import { History, X, Edit3, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 interface EntryDetailViewProps {
-  entry: any;
+  entry: Entry;
   children: React.ReactNode;
 }
 export function EntryDetailView({ entry, children }: EntryDetailViewProps) {
-  const addVersion = useStore(state => state.addVersion);
+  const addVersion = useStore(s => s.addVersion);
   const [newReflection, setNewReflection] = useState('');
   const [isAdding, setIsAdding] = useState(false);
   const handleAddVersion = () => {
@@ -30,13 +30,16 @@ export function EntryDetailView({ entry, children }: EntryDetailViewProps) {
     setIsAdding(false);
     toast.success("Reflection added to product history.");
   };
+  const latestReflection = entry.versions.length > 0 
+    ? entry.versions[entry.versions.length - 1] 
+    : null;
   return (
     <Drawer>
       <DrawerTrigger asChild>
         {children}
       </DrawerTrigger>
       <DrawerContent className="max-h-[92vh] bg-surface rounded-t-[3rem] border-none shadow-2xl">
-        <div className="max-w-md mx-auto w-full h-full flex flex-col overflow-hidden px-2">
+        <div className="max-w-md mx-auto w-full h-full flex flex-col overflow-hidden px-4">
           <DrawerHeader className="border-b border-black/5 pb-6 pt-8 flex items-start justify-between">
             <div className="space-y-1">
               <span className="text-[9px] font-styrene uppercase tracking-widest text-primary font-bold bg-primary/10 px-2 py-1 rounded-full">{entry.topic}</span>
@@ -51,11 +54,11 @@ export function EntryDetailView({ entry, children }: EntryDetailViewProps) {
               {isAdding ? <X size={20} /> : <Edit3 size={20} />}
             </Button>
           </DrawerHeader>
-          <DrawerDescription className='sr-only'>Product-like memory details and history.</DrawerDescription>
-          <div className="flex-1 overflow-y-auto p-6 space-y-10 pb-24 scroll-smooth">
+          <DrawerDescription className='sr-only'>Trace the evolution of your understanding over time.</DrawerDescription>
+          <div className="flex-1 overflow-y-auto py-8 space-y-10 pb-32 scroll-smooth">
             {isAdding && (
               <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500 glass-panel p-6 rounded-[2rem]">
-                <label className="text-[10px] font-styrene uppercase tracking-widest text-primary font-bold">Add New Reflection</label>
+                <label className="text-[10px] font-styrene uppercase tracking-widest text-primary font-bold">New Interpretation</label>
                 <Textarea
                   className="min-h-[150px] bg-neutral-50/50 border-none rounded-2xl font-tiempos text-lg leading-relaxed focus:bg-white transition-all shadow-inner p-4"
                   placeholder="How does this look to you today?"
@@ -67,52 +70,52 @@ export function EntryDetailView({ entry, children }: EntryDetailViewProps) {
                   onClick={handleAddVersion}
                   className="vibrant-btn w-full"
                 >
-                  Save Reflection
+                  Save Version {entry.versions.length + 1}
                 </Button>
               </div>
             )}
-            <div className="space-y-12">
-              {/* Latest Version - The "Current Model" */}
-              <div className="relative pl-8">
+            <div className="space-y-12 px-2">
+              {/* Latest Version */}
+              <div className="relative pl-10">
                 <div className="absolute left-0 top-0 h-full w-[2px] bg-vibrant-gradient rounded-full" />
                 <div className="absolute -left-[5px] top-0 h-3 w-3 rounded-full bg-primary ring-4 ring-white" />
                 <div className="space-y-3">
                    <div className="flex items-center gap-2">
                     <Sparkles size={12} className="text-primary" />
                     <span className="text-[9px] font-styrene uppercase tracking-widest text-primary font-bold">
-                      Latest Model — {format(new Date((entry.versions?.length ?? 0) > 0 ? entry.versions![entry.versions.length - 1].date : entry.dateAdded), 'MMM d, yyyy')}
+                      Current Perspective — {format(parseISO(latestReflection?.date ?? entry.dateAdded), 'MMM d, yyyy')}
                     </span>
                   </div>
-                  <p className="text-xl font-tiempos leading-relaxed text-foreground/90 font-medium">
-                    {(entry.versions?.length ?? 0) > 0 ? entry.versions![entry.versions.length - 1].text : entry.notes}
+                  <p className="text-xl font-tiempos leading-relaxed text-foreground font-medium">
+                    {latestReflection?.text ?? entry.notes}
                   </p>
                 </div>
               </div>
               {/* History Timeline */}
-              {(entry.versions?.length ?? 0) > 0 && (
+              {entry.versions.length > 0 && (
                 <div className="space-y-10">
-                   <div className="flex items-center gap-2 text-muted-foreground/40 pl-8">
+                   <div className="flex items-center gap-2 text-muted-foreground/40 pl-10">
                     <History size={14} />
-                    <span className="text-[10px] font-styrene uppercase tracking-widest font-bold">Archive Log</span>
+                    <span className="text-[10px] font-styrene uppercase tracking-widest font-bold">Evolution Log</span>
                   </div>
                   {/* Original Note */}
-                  <div className="relative pl-8 opacity-50">
+                  <div className="relative pl-10 opacity-60">
                     <div className="absolute left-0 top-0 h-full w-[2px] bg-neutral-200 rounded-full" />
                     <div className="absolute -left-[5px] top-0 h-3 w-3 rounded-full bg-neutral-300 ring-4 ring-white" />
                     <span className="text-[9px] font-styrene uppercase tracking-widest text-muted-foreground font-bold block mb-2">
-                      Original Concept — {format(new Date(entry.dateAdded), 'MMM d, yyyy')}
+                      Original Capture — {format(parseISO(entry.dateAdded), 'MMM d, yyyy')}
                     </span>
                     <p className="text-base font-tiempos leading-relaxed text-muted-foreground">
                       {entry.notes}
                     </p>
                   </div>
                   {/* Intermediary versions */}
-                  {entry.versions?.slice(0, -1).reverse().map((v: any) => (
-                    <div key={v.id} className="relative pl-8 opacity-70">
+                  {[...entry.versions].slice(0, -1).reverse().map((v) => (
+                    <div key={v.id} className="relative pl-10 opacity-80">
                       <div className="absolute left-0 top-0 h-full w-[2px] bg-neutral-200 rounded-full" />
                       <div className="absolute -left-[5px] top-0 h-3 w-3 rounded-full bg-neutral-400 ring-4 ring-white" />
                       <span className="text-[9px] font-styrene uppercase tracking-widest text-muted-foreground font-bold block mb-2">
-                        Iteration {v.version} — {format(new Date(v.date), 'MMM d, yyyy')}
+                        Iteration {v.version} — {format(parseISO(v.date), 'MMM d, yyyy')}
                       </span>
                       <p className="text-base font-tiempos leading-relaxed text-foreground/70">
                         {v.text}

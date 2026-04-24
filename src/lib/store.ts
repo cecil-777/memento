@@ -30,8 +30,8 @@ const INITIAL_ENTRIES: Entry[] = [
   {
     id: '1',
     url: 'https://en.wikipedia.org/wiki/Goldlist_method',
-    topic: 'Learning',
-    notes: 'The Goldlist method relies on the long-term memory instead of short-term cramming.',
+    topic: 'Methodology',
+    notes: 'The Goldlist method is a slow-learning technique that bypasses short-term memory through a deliberate 14-day distillation cycle.',
     dateAdded: subDays(new Date(), 15).toISOString(),
     status: 'ready',
     versions: []
@@ -40,7 +40,7 @@ const INITIAL_ENTRIES: Entry[] = [
     id: '2',
     url: 'https://fs.blog/mental-models/',
     topic: 'Philosophy',
-    notes: 'Thinking in mental models helps understand the world better.',
+    notes: 'Mental models are the framework we use to understand life. They are like lens through which we view and organize complex systems.',
     dateAdded: new Date().toISOString(),
     status: 'incubating',
     versions: []

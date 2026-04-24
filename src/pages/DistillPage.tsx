@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useStore } from '@/lib/store';
 import { useSwipeable } from 'react-swipeable';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -9,28 +9,31 @@ import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 export function DistillPage() {
   const navigate = useNavigate();
-  const entries = useStore(state => state.entries);
-  const updateEntryStatus = useStore(state => state.updateEntryStatus);
-  const addVersion = useStore(state => state.addVersion);
+  const entries = useStore(s => s.entries);
+  const updateEntryStatus = useStore(s => s.updateEntryStatus);
+  const addVersion = useStore(s => s.addVersion);
   const readyEntries = entries.filter(e => e.status === 'ready');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isRefining, setIsRefining] = useState(false);
   const [refinedNotes, setRefinedNotes] = useState('');
   const [exitDirection, setExitDirection] = useState<number>(0);
   const current = readyEntries[currentIndex];
-  const handleArchive = () => {
+  const handleArchive = useCallback(() => {
+    if (!current) return;
     setExitDirection(-1);
     setTimeout(() => {
       updateEntryStatus(current.id, 'archived');
       setExitDirection(0);
       setIsRefining(false);
     }, 300);
-  };
-  const startRefining = () => {
+  }, [current, updateEntryStatus]);
+  const startRefining = useCallback(() => {
+    if (!current) return;
     setRefinedNotes(current.notes);
     setIsRefining(true);
-  };
-  const handleKeep = () => {
+  }, [current]);
+  const handleKeep = useCallback(() => {
+    if (!current) return;
     addVersion(current.id, refinedNotes || current.notes);
     setExitDirection(1);
     setTimeout(() => {
@@ -39,13 +42,18 @@ export function DistillPage() {
       setIsRefining(false);
     }, 300);
     toast.success("Knowledge sealed in the vault.");
-  };
-  const handlers = useSwipeable({
+  }, [current, refinedNotes, addVersion, updateEntryStatus]);
+  const swipeHandlers = useSwipeable({
     onSwipedLeft: () => !isRefining && handleArchive(),
     onSwipedRight: () => !isRefining && startRefining(),
     preventScrollOnSwipe: true,
     trackMouse: true
   });
+  // To avoid ref warning with Framer Motion, we spread handlers but avoid the 'ref' prop 
+  // and apply it to a container or handle the ref logic separately if needed.
+  // In most cases with react-swipeable + framer-motion, using the spread on the motion component works 
+  // if we pass the ref correctly or use the internal ref.
+  const { ref: swipeRef, ...handlers } = swipeHandlers;
   if (!current) {
     return (
       <div className="max-w-7xl mx-auto px-6 py-24 text-center space-y-6">
@@ -80,8 +88,9 @@ export function DistillPage() {
         <AnimatePresence mode="wait">
           {!isRefining ? (
             <motion.div
+              key={`card-${current.id}`}
               {...handlers}
-              key={current.id}
+              ref={swipeRef}
               initial={{ x: 0, opacity: 1, scale: 0.9 }}
               animate={{
                 x: exitDirection * 500,
@@ -90,7 +99,7 @@ export function DistillPage() {
                 scale: 1
               }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="w-full h-full glass-panel rounded-[3rem] p-10 flex flex-col justify-center gap-8 cursor-grab active:cursor-grabbing border-primary/10"
+              className="w-full h-full glass-panel rounded-[3rem] p-10 flex flex-col justify-center gap-8 cursor-grab active:cursor-grabbing border-primary/10 touch-none"
             >
               <div className="space-y-6">
                 <span className="inline-block px-3 py-1 bg-primary text-white rounded-full text-[9px] font-styrene font-bold uppercase tracking-widest">
@@ -105,12 +114,13 @@ export function DistillPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-primary font-styrene text-[10px] uppercase tracking-widest font-bold hover:underline"
+                    onClick={(e) => e.stopPropagation()}
                   >
                     <ExternalLink size={14} /> Open Original Source
                   </a>
                 )}
               </div>
-              <div className="pt-8 flex justify-between items-center opacity-30">
+              <div className="pt-8 flex justify-between items-center opacity-30 select-none">
                 <div className="flex items-center gap-2">
                   <X size={16} />
                   <span className="text-[9px] font-styrene uppercase tracking-tighter font-bold">Swipe Left to Archive</span>
@@ -123,8 +133,10 @@ export function DistillPage() {
             </motion.div>
           ) : (
             <motion.div
+              key={`refine-${current.id}`}
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
               className="w-full h-full glass-panel rounded-[3rem] p-8 flex flex-col space-y-6"
             >
               <div className="flex-1 bg-neutral-50/50 rounded-[2rem] p-6 border border-black/5">
@@ -160,7 +172,7 @@ export function DistillPage() {
         <div className="py-6 grid grid-cols-2 gap-4">
           <button
             onClick={handleArchive}
-            className="flex flex-col items-center justify-center gap-2 p-6 rounded-[2rem] bg-neutral-100 hover:bg-neutral-200 transition-colors"
+            className="flex flex-col items-center justify-center gap-2 p-6 rounded-[2rem] bg-neutral-100 hover:bg-neutral-200 transition-colors active:scale-95"
           >
             <Trash2 size={24} className="text-muted-foreground/60" />
             <span className="text-[9px] font-styrene uppercase tracking-widest font-bold opacity-60 text-muted-foreground">Archive</span>
