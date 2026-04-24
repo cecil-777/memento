@@ -21,6 +21,7 @@ export interface Entry {
 interface MementoState {
   entries: Entry[];
   addEntry: (entry: Omit<Entry, 'id' | 'dateAdded' | 'status' | 'versions'>) => void;
+  updateEntry: (id: string, updates: Partial<Pick<Entry, 'url' | 'topic' | 'notes'>>) => void;
   updateEntryStatus: (id: string, status: EntryStatus) => void;
   addVersion: (entryId: string, text: string) => void;
   importData: (data: string) => void;
@@ -61,6 +62,9 @@ export const useStore = create<MementoState>()(
             versions: []
           }
         ]
+      })),
+      updateEntry: (id, updates) => set((state) => ({
+        entries: state.entries.map((e) => e.id === id ? { ...e, ...updates } : e)
       })),
       updateEntryStatus: (id, status) => set((state) => ({
         entries: state.entries.map((e) => e.id === id ? { ...e, status } : e)

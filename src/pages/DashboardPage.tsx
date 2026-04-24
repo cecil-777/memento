@@ -3,15 +3,16 @@ import { useStore } from '@/lib/store';
 import { Link } from 'react-router-dom';
 import { addDays, differenceInDays, parseISO } from 'date-fns';
 import { Progress } from '@/components/ui/progress';
-import { Sparkles, ShoppingBag, Clock, ArrowRight } from 'lucide-react';
+import { Sparkles, ShoppingBag, Clock, ArrowRight, Edit3 } from 'lucide-react';
+import { EntryEditDrawer } from '@/components/EntryEditDrawer';
 export function DashboardPage() {
   const entries = useStore(s => s.entries);
-  const incubating = useMemo(() => 
-    entries.filter(e => e.status === 'incubating'), 
+  const incubating = useMemo(() =>
+    entries.filter(e => e.status === 'incubating'),
     [entries]
   );
-  const readyItemsCount = useMemo(() => 
-    entries.filter(e => e.status === 'ready').length, 
+  const readyItemsCount = useMemo(() =>
+    entries.filter(e => e.status === 'ready').length,
     [entries]
   );
   return (
@@ -73,18 +74,28 @@ export function DashboardPage() {
               const daysRemaining = Math.max(0, differenceInDays(unlockDate, new Date()));
               const progress = Math.min(100, (daysPassed / 14) * 100);
               return (
-                <div key={entry.id} className="product-card p-8 flex flex-col gap-6">
+                <div key={entry.id} className="product-card p-8 flex flex-col gap-6 relative">
                   <div className="flex justify-between items-start">
                     <span className="px-4 py-1.5 bg-primary/10 rounded-full text-[9px] font-styrene font-bold text-primary uppercase tracking-widest">
                       {entry.topic || 'General'}
                     </span>
-                    <div className="text-right">
-                      <span className="text-[10px] font-styrene text-muted-foreground font-bold uppercase tracking-tighter block">
-                        Unlock in
-                      </span>
-                      <span className="text-xl font-copernicus font-bold text-foreground">
-                        {daysRemaining}D
-                      </span>
+                    <div className="flex items-center gap-3">
+                      <EntryEditDrawer entry={entry}>
+                        <button 
+                          className="w-10 h-10 rounded-full bg-neutral-50 flex items-center justify-center text-muted-foreground hover:text-primary transition-all active:scale-90 border border-black/5"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Edit3 size={16} />
+                        </button>
+                      </EntryEditDrawer>
+                      <div className="text-right">
+                        <span className="text-[10px] font-styrene text-muted-foreground font-bold uppercase tracking-tighter block">
+                          Unlock in
+                        </span>
+                        <span className="text-xl font-copernicus font-bold text-foreground">
+                          {daysRemaining}D
+                        </span>
+                      </div>
                     </div>
                   </div>
                   <h4 className="text-xl font-tiempos leading-relaxed text-foreground/90 line-clamp-3">
