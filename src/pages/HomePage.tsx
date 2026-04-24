@@ -6,21 +6,21 @@ export function HomePage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigate('/', { replace: true });
-    }, 100);
+    }, 1200); // Slightly longer for a deliberate splash feel
     return () => clearTimeout(timer);
   }, [navigate]);
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-4 overflow-hidden relative">
-      <div className="text-center space-y-6 relative z-10 animate-pulse">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-neutral-bg text-text-heading p-4 overflow-hidden relative">
+      <div className="text-center space-y-6 relative z-10 animate-in fade-in zoom-in duration-700">
         <div className="flex justify-center">
-          <div className="w-16 h-16 rounded-2xl bg-vibrant-gradient flex items-center justify-center shadow-vibrant">
+          <div className="w-16 h-16 rounded-2xl bg-premium-gradient flex items-center justify-center shadow-vibrant">
             <Sparkles className="w-8 h-8 text-white" />
           </div>
         </div>
         <div className="space-y-2">
-          <h1 className="text-2xl font-copernicus font-bold">Memento</h1>
-          <p className="text-sm font-styrene text-muted-foreground uppercase tracking-widest">
-            Opening your Vault...
+          <h1 className="text-3xl font-copernicus font-bold">Memento</h1>
+          <p className="text-[10px] font-styrene text-text-caption uppercase tracking-widest font-bold">
+            Unlocking your Vault...
           </p>
         </div>
       </div>

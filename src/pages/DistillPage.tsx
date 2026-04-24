@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useStore } from '@/lib/store';
 import { useSwipeable } from 'react-swipeable';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, X, ArrowLeft, Trash2, Edit3, ExternalLink } from 'lucide-react';
+import { Check, X, ArrowLeft, Trash2, Edit3, ExternalLink, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
